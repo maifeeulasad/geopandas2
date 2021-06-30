@@ -16,6 +16,8 @@ from geopandas.tools import clip  # noqa
 
 import geopandas.datasets  # noqa
 
+import geopandas._compat
+
 
 # make the interactive namespace easier to use
 # for `from geopandas import *` demos.

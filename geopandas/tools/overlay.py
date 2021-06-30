@@ -275,8 +275,8 @@ def overlay(df1, df2, how="intersection", keep_geom_type=None, make_valid=True):
             elif mask.any():
                 raise ValueError(
                     "You have passed make_valid=False along with "
-                    f"{mask.sum()} invalid input geometries. "
-                    "Use make_valid=True or make sure that all geometries "
+                    + "%s invalid input geometries. "%mask.sum()
+                    + "Use make_valid=True or make sure that all geometries "
                     "are valid before using overlay."
                 )
         return df

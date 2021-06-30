@@ -155,7 +155,7 @@ else:
         yield
 
 
-def import_optional_dependency(name: str, extra: str = ""):
+def import_optional_dependency(name, extra=""):
     """
     Import an optional dependency.
 
@@ -187,7 +187,7 @@ def import_optional_dependency(name: str, extra: str = ""):
         module = importlib.import_module(name)
 
     except ImportError:
-        raise ImportError(msg) from None
+        raise ImportError(msg)
 
     return module
 

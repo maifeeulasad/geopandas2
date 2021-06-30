@@ -1,4 +1,7 @@
-from collections.abc import Iterable
+try:
+    from collections.abc import Iterable
+except ImportError:
+    from collections import Iterable
 import numbers
 import operator
 import warnings
@@ -25,9 +28,9 @@ try:
 except ImportError:
     geos = None
 
-from . import _compat as compat
-from . import _vectorized as vectorized
-from .sindex import _get_sindex_class
+import _compat as compat
+import _vectorized as vectorized
+from sindex import _get_sindex_class
 
 
 class GeometryDtype(ExtensionDtype):

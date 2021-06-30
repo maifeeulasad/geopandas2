@@ -7,7 +7,15 @@ import shapely.wkb
 
 from geopandas import GeoDataFrame
 
-from .. import _compat as compat
+import os
+import sys
+import inspect
+
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir) 
+
+import _compat as compat
 
 
 @contextmanager
@@ -36,7 +44,7 @@ def _get_conn(conn_or_engine):
         with conn_or_engine.begin() as conn:
             yield conn
     else:
-        raise ValueError(f"Unknown Connectable: {conn_or_engine}")
+        raise ValueError("Unknown Connectable: %s"%conn_or_engine)
 
 
 def _df_to_geodf(df, geom_col="geom", crs=None):

@@ -24,14 +24,37 @@ except ImportError:
     except ImportError:
         fiona_env = None
 
-from geopandas import GeoDataFrame, GeoSeries
+
+import os
+import sys
+import inspect
+
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+
+from geodataframe import GeoDataFrame
+from geoseries import GeoSeries
 
 
 # Adapted from pandas.io.common
-from urllib.request import urlopen as _urlopen
-from urllib.parse import urlparse as parse_url
-from urllib.parse import uses_netloc, uses_params, uses_relative
+from urllib2 import urlopen as _urlopen
+from urllib2 import urlparse as parse_url
 
+uses_relative = ['', 'ftp', 'http', 'gopher', 'nntp', 'imap',
+                 'wais', 'file', 'https', 'shttp', 'mms',
+                 'prospero', 'rtsp', 'rtspu', 'sftp',
+                 'svn', 'svn+ssh', 'ws', 'wss']
+
+uses_netloc = ['', 'ftp', 'http', 'gopher', 'nntp', 'telnet',
+               'imap', 'wais', 'file', 'mms', 'https', 'shttp',
+               'snews', 'prospero', 'rtsp', 'rtspu', 'rsync',
+               'svn', 'svn+ssh', 'sftp', 'nfs', 'git', 'git+ssh',
+               'ws', 'wss']
+
+uses_params = ['', 'ftp', 'hdl', 'prospero', 'http', 'imap',
+               'https', 'shttp', 'rtsp', 'rtspu', 'sip', 'sips',
+               'mms', 'sftp', 'tel']
 
 _VALID_URLS = set(uses_relative + uses_netloc + uses_params)
 _VALID_URLS.discard("")
@@ -40,8 +63,8 @@ _VALID_URLS.discard("")
 def _check_fiona(func):
     if fiona is None:
         raise ImportError(
-            f"the {func} requires the 'fiona' package, but it is not installed or does "
-            f"not import correctly.\nImporting fiona resulted in: {fiona_import_error}"
+            "the %s requires the 'fiona' package, but it is not installed or does "%func + 
+            "not import correctly.\nImporting fiona resulted in: %s"%fiona_import_error
         )
 
 
@@ -240,8 +263,7 @@ def _to_file(
     index=None,
     mode="w",
     crs=None,
-    **kwargs,
-):
+    **kwargs):
     """
     Write this GeoDataFrame to an OGR data source
 

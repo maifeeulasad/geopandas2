@@ -12,7 +12,7 @@ from shapely.geometry.base import BaseGeometry
 from geopandas.base import GeoPandasBase, _delegate_property
 from geopandas.plotting import plot_series
 
-from .array import (
+from geopandas.array import (
     GeometryDtype,
     from_shapely,
     from_wkb,
@@ -20,8 +20,8 @@ from .array import (
     to_wkb,
     to_wkt,
 )
-from .base import is_geometry_type
-from . import _compat as compat
+from base import is_geometry_type
+import _compat as compat
 
 
 _SERIES_WARNING_MSG = """\
@@ -66,6 +66,7 @@ def inherit_doc(cls):
 
     return decorator
 
+__metaclass__ = type
 
 class GeoSeries(GeoPandasBase, Series):
     """
@@ -571,7 +572,7 @@ class GeoSeries(GeoPandasBase, Series):
 
     @inherit_doc(pd.Series)
     def apply(self, func, convert_dtype=True, args=(), **kwargs):
-        result = super().apply(func, convert_dtype=convert_dtype, args=args, **kwargs)
+        result = super(self).apply(func, convert_dtype=convert_dtype, args=args, **kwargs)
         if isinstance(result, GeoSeries):
             if self.crs is not None:
                 result.set_crs(self.crs, inplace=True)

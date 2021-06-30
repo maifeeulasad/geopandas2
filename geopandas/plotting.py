@@ -115,7 +115,7 @@ def _PolygonPatch(polygon, **kwargs):
 
     path = Path.make_compound_path(
         Path(np.asarray(polygon.exterior.coords)[:, :2]),
-        *[Path(np.asarray(ring.coords)[:, :2]) for ring in polygon.interiors],
+        *[Path(np.asarray(ring.coords)[:, :2]) for ring in polygon.interiors]
     )
     return PathPatch(path, **kwargs)
 
@@ -254,7 +254,7 @@ def _plot_point_collection(
     vmax=None,
     marker="o",
     markersize=None,
-    **kwargs,
+    **kwargs
 ):
     """
     Plots a collection of Point and MultiPoint geometries to `ax`
@@ -488,7 +488,7 @@ def plot_dataframe(
     classification_kwds=None,
     missing_kwds=None,
     aspect="auto",
-    **style_kwds,
+    **style_kwds
 ):
     """
     Plot a GeoDataFrame.
@@ -694,7 +694,7 @@ GON (((-122.84000 49.00000, -120.0000...
             figsize=figsize,
             markersize=markersize,
             aspect=aspect,
-            **style_kwds,
+            **style_kwds
         )
 
     # To accept pd.Series and np.arrays as column
@@ -831,7 +831,7 @@ GON (((-122.84000 49.00000, -120.0000...
             vmax=mx,
             markersize=markersize,
             cmap=cmap,
-            **style_kwds,
+            **style_kwds
         )
 
     if missing_kwds is not None and not expl_series[nan_idx].empty:
@@ -909,8 +909,9 @@ GON (((-122.84000 49.00000, -120.0000...
     plt.draw()
     return ax
 
+import _compat
 
-if geopandas._compat.PANDAS_GE_025:
+if _compat.PANDAS_GE_025:
     from pandas.plotting import PlotAccessor
 
     class GeoplotAccessor(PlotAccessor):
@@ -928,7 +929,7 @@ if geopandas._compat.PANDAS_GE_025:
                 return PlotAccessor(data)(kind=kind, **kwargs)
             else:
                 # raise error
-                raise ValueError(f"{kind} is not a valid plot kind")
+                raise ValueError("%s is not a valid plot kind"%kind)
 
         def geo(self, *args, **kwargs):
             return self(kind="geo", *args, **kwargs)

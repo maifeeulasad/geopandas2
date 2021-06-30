@@ -16,8 +16,7 @@ from geopandas.base import GeoPandasBase, is_geometry_type
 from geopandas.geoseries import GeoSeries, inherit_doc
 import geopandas.io
 from geopandas.plotting import plot_dataframe
-from . import _compat as compat
-
+import _compat as compat
 
 DEFAULT_GEO_COLUMN_NAME = "geometry"
 
@@ -100,9 +99,10 @@ class GeoDataFrame(GeoPandasBase, DataFrame):
 
     _geometry_column_name = DEFAULT_GEO_COLUMN_NAME
 
-    def __init__(self, *args, geometry=None, crs=None, **kwargs):
-        with compat.ignore_shapely2_warnings():
-            super(GeoDataFrame, self).__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        crs = kwargs.pop("crs", None)
+        geometry = kwargs.pop("geometry", None)
+        super(GeoDataFrame, self).__init__(*args, **kwargs)
 
         # need to set this before calling self['geometry'], because
         # getitem accesses crs
@@ -339,7 +339,7 @@ class GeoDataFrame(GeoPandasBase, DataFrame):
         """
         geometry_col = self.geometry.name
         if col in self.columns:
-            raise ValueError(f"Column named {col} already exists")
+            raise ValueError("Column named %s already exists"%col)
         else:
             if not inplace:
                 return self.rename(columns={geometry_col: col}).set_geometry(
@@ -500,7 +500,7 @@ class GeoDataFrame(GeoPandasBase, DataFrame):
         GeoDataFrame.to_file : write GeoDataFrame to file
 
         """
-        return geopandas.io.file._read_file(filename, **kwargs)
+        return geopandas.io._read_file(filename, **kwargs)
 
     @classmethod
     def from_features(cls, features, crs=None, columns=None):
@@ -969,9 +969,9 @@ box': (2.0, 1.0, 2.0, 1.0)}], 'bbox': (1.0, 1.0, 2.0, 2.0)}
         GeoDataFrame.to_file : write GeoDataFrame to file
         """
 
-        from geopandas.io.arrow import _to_parquet
+        from io import arrow
 
-        _to_parquet(self, path, compression=compression, index=index, **kwargs)
+        arrow._to_parquet(self, path, compression=compression, index=index, **kwargs)
 
     def to_feather(self, path, index=None, compression=None, **kwargs):
         """Write a GeoDataFrame to the Feather format.
@@ -1017,9 +1017,9 @@ box': (2.0, 1.0, 2.0, 1.0)}], 'bbox': (1.0, 1.0, 2.0, 2.0)}
         GeoDataFrame.to_file : write GeoDataFrame to file
         """
 
-        from geopandas.io.arrow import _to_feather
+        from io import arrow
 
-        _to_feather(self, path, index=index, compression=compression, **kwargs)
+        arrow._to_feather(self, path, index=index, compression=compression, **kwargs)
 
     def to_file(
         self, filename, driver="ESRI Shapefile", schema=None, index=None, **kwargs
@@ -1081,9 +1081,8 @@ box': (2.0, 1.0, 2.0, 1.0)}], 'bbox': (1.0, 1.0, 2.0, 2.0)}
 
         >>> gdf.to_file('dataframe.shp', mode="a")  # doctest: +SKIP
         """
-        from geopandas.io.file import _to_file
 
-        _to_file(self, filename, driver, schema, index, **kwargs)
+        geopandas.io._to_file(self, filename, driver, schema, index, **kwargs)
 
     def set_crs(self, crs=None, epsg=None, inplace=False, allow_override=False):
         """

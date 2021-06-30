@@ -8,7 +8,7 @@ from shapely.geometry import box
 from shapely.geometry.base import BaseGeometry
 from shapely.ops import cascaded_union
 
-from .array import GeometryArray, GeometryDtype
+from geopandas.array import GeometryArray, GeometryDtype
 
 
 def is_geometry_type(data):
@@ -82,6 +82,7 @@ def _delegate_geo_method(op, this, *args, **kwargs):
     data = getattr(a_this, op)(*args, **kwargs).data
     return GeoSeries(data, index=this.index, crs=this.crs)
 
+__metaclass__ = type
 
 class GeoPandasBase(object):
     @property

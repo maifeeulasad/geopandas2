@@ -15,7 +15,7 @@ import shapely.wkt
 
 from shapely.geometry.base import BaseGeometry
 
-from . import _compat as compat
+import _compat as compat
 
 try:
     import pygeos

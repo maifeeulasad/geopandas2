@@ -5,7 +5,7 @@ from shapely.geometry.base import BaseGeometry
 import pandas as pd
 import numpy as np
 
-from . import _compat as compat
+import _compat as compat
 
 
 def _get_sindex_class():
